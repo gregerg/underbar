@@ -153,12 +153,20 @@ var _ = {};
   // Calls the method named by functionOrKey on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
-    var applyFunc = function(value) { return functionOrKey.apply(value, args); };
-    //return _.map(collection, applyFunc);
     var output = [];
-    collection.forEach(function(value, index, collection) {
-      output.push(applyFunc(value, index, collection));
-    })
+    var applyFunc = function() {};
+    if (typeof functionOrKey === 'function') {
+      applyFunc = function(value) { return functionOrKey.apply(value, args); };
+      collection.forEach(function(value, index, collection) {
+        output.push(applyFunc(value, index, collection));
+      });
+    } else {
+      //applyFunc = function(value) { return collection.functionOrKey(value, args); };
+      collection.forEach(function(value, index, collection) {
+        output.push(value[functionOrKey]());
+      });
+    }
+
     return output;
   };
 
