@@ -154,14 +154,13 @@ var _ = {};
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
     var output = [];
-    var applyFunc = function() {};
+    
     if (typeof functionOrKey === 'function') {
-      applyFunc = function(value) { return functionOrKey.apply(value, args); };
+      var applyFunc = function(value) { return functionOrKey.apply(value, args); };
       collection.forEach(function(value, index, collection) {
         output.push(applyFunc(value, index, collection));
       });
     } else {
-      //applyFunc = function(value) { return collection.functionOrKey(value, args); };
       collection.forEach(function(value, index, collection) {
         output.push(value[functionOrKey]());
       });
@@ -184,6 +183,17 @@ var _ = {};
   //     return total + number;
   //   }, 0); // should be 6
   _.reduce = function(collection, iterator, accumulator) {
+    if (typeof accumulator == 'undefined') {
+      accumulator = collection[0];
+    }
+    var def = accumulator;
+    collection.forEach(function(value, index, collection) {
+      accumulator = iterator(accumulator, value);
+    });
+    if (isNaN(accumulator)) {
+      return def;
+    }
+    return accumulator;
   };
 
   // Determine if the array or object contains a given value (using `===`).
