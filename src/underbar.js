@@ -219,6 +219,12 @@ var _ = {};
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (!iterator) iterator = _.identity;
+    var output = false;
+    collection.forEach(function(value, index, collection){
+      if(iterator(value)) { output = true; }
+    });
+    return output;
   };
 
 
